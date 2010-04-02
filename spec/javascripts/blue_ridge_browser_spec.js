@@ -42,68 +42,64 @@ describe("BlueRidge.Browser", function(){
 
   //TODO split most of these tests out into tests for the treatUrlAsRelativeTo* functions
   describe("require", function(){
+    afterEach(function () {
+      BlueRidge.Browser.requirements = [];
+    });
+
     describe("correctly alters the incoming URL based on the current file's relation to the 'fixtures' directory", function(){
       describe("when requiring a BlueRidge dependency", function(){
         it("prepends a single '../' if the current file is directly in the 'fixtures' directory", function(){
           spyOn(BlueRidge.Browser, 'currentFile').andReturn("/ignored/fixtures/current_file.html");
-          spyOn(BlueRidge.Browser, 'createScriptTag');
           BlueRidge.Browser.require("some_file.js", {system: true});
-          expect(BlueRidge.Browser.createScriptTag).wasCalledWith("../some_file.js", null);
+          expect(BlueRidge.Browser.requirements[0]).toEqual({url: "../some_file.js", onload: null});
         });
 
         it("prepends two '../' if the current file is in a subdirectory directly beneath the 'fixtures' directory", function(){
           spyOn(BlueRidge.Browser, 'currentFile').andReturn("/ignored/fixtures/foo/current_file.html");
-          spyOn(BlueRidge.Browser, 'createScriptTag');
           BlueRidge.Browser.require("some_file.js", {system: true});
-          expect(BlueRidge.Browser.createScriptTag).wasCalledWith("../../some_file.js", null);
+          expect(BlueRidge.Browser.requirements[0]).toEqual({url: "../../some_file.js", onload: null});
         });
 
         it("prepends eight '../' if the current file is in a subdirectory nested seven-directories beneath the 'fixtures' directory", function(){
           spyOn(BlueRidge.Browser, 'currentFile').andReturn("/ignored/fixtures/1/2/3/4/5/6/7/current_file.html");
-          spyOn(BlueRidge.Browser, 'createScriptTag');
           BlueRidge.Browser.require("some_file.js", {system: true});
-          expect(BlueRidge.Browser.createScriptTag).wasCalledWith("../../../../../../../../some_file.js", null);
+          expect(BlueRidge.Browser.requirements[0]).toEqual({url: "../../../../../../../../some_file.js", onload: null});
         });
       });
 
       describe("when requiring a spec dependency", function(){
         it("prepends a single '../' if the current file is directly in the 'fixtures' directory", function(){
           spyOn(BlueRidge.Browser, 'currentFile').andReturn("/ignored/fixtures/current_file.html");
-          spyOn(BlueRidge.Browser, 'createScriptTag');
           BlueRidge.Browser.require("some_file.js");
-          expect(BlueRidge.Browser.createScriptTag).wasCalledWith("../some_file.js", null);
+          expect(BlueRidge.Browser.requirements[0]).toEqual({url: "../some_file.js", onload: null});
         });
 
         it("pops off one '../' and then prepends two '../' if the current file is in a subdirectory directly beneath the 'fixtures' directory", function(){
           spyOn(BlueRidge.Browser, 'currentFile').andReturn("/ignored/fixtures/foo/current_file.html");
-          spyOn(BlueRidge.Browser, 'createScriptTag');
           BlueRidge.Browser.require("../some_file.js");
-          expect(BlueRidge.Browser.createScriptTag).wasCalledWith("../../some_file.js", null);
+          expect(BlueRidge.Browser.requirements[0]).toEqual({url: "../../some_file.js", onload: null});
         });
 
         it("pops off seven '../' and then prepends eight '../' if the current file is in a subdirectory nested seven-directories beneath the 'fixtures' directory", function(){
           spyOn(BlueRidge.Browser, 'currentFile').andReturn("/ignored/fixtures/1/2/3/4/5/6/7/current_file.html");
-          spyOn(BlueRidge.Browser, 'createScriptTag');
           BlueRidge.Browser.require("../../../../../../../some_file.js");
-          expect(BlueRidge.Browser.createScriptTag).wasCalledWith("../../../../../../../../some_file.js", null);
+          expect(BlueRidge.Browser.requirements[0]).toEqual({url: "../../../../../../../../some_file.js", onload: null});
         });
       });
     });
 
-    it("creates a script tag with an onload callback if passed an 'onload' option", function(){
+    it("queues a requirement with an onload callback if passed an 'onload' option", function(){
       var callback = function(){ alert("some callback!") };
       spyOn(BlueRidge.Browser, "calculateDepth").andReturn(0);
-      spyOn(BlueRidge.Browser, 'createScriptTag');
       BlueRidge.Browser.require("some_url", {onload: callback});
-      expect(BlueRidge.Browser.createScriptTag).wasCalledWith("some_url", callback);
+      expect(BlueRidge.Browser.requirements[0]).toEqual({url: "some_url", onload: callback});
     });
 
-    it("creates a script tag with NO onload callback if passed NOT an 'onload' option", function(){
+    it("queues a requirement with NO onload callback if NOT passed an 'onload' option", function(){
       var callback = function(){ alert("some callback!") };
       spyOn(BlueRidge.Browser, "calculateDepth").andReturn(0);
-      spyOn(BlueRidge.Browser, 'createScriptTag');
       BlueRidge.Browser.require("some_url");
-      expect(BlueRidge.Browser.createScriptTag).wasCalledWith("some_url", null);
+      expect(BlueRidge.Browser.requirements[0]).toEqual({url: "some_url", onload: null});
     });
   });
 });
