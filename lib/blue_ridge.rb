@@ -6,11 +6,11 @@ module BlueRidge
   end
   
   def self.rhino_command
-    "java -Dblue.ridge.prefix=\"#{plugin_prefix}\" -jar #{plugin_prefix}/vendor/js.jar -w -debug -opt -1"
+    "java -Dblue.ridge.prefix=\"#{plugin_prefix}\" -jar \"#{plugin_prefix}/vendor/js.jar\" -w -debug -opt -1"
   end
   
   def self.test_runner_command
-    "#{rhino_command} #{plugin_prefix}/lib/test_runner.js"
+    "#{rhino_command} \"#{plugin_prefix}/lib/test_runner.js\""
   end
   
   def self.find_base_spec_dir
