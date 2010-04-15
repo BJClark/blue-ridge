@@ -7,29 +7,29 @@ describe("BlueRidge.CommandLine", function(){
 
   describe("fixtureFile", function(){
     it("returns the filename converted from a '_spec.js' suffix to '.html'", function(){
-      BlueRidge.CommandLine.specFile = 'some/path/to/a_spec.js'
+      BlueRidge.CommandLine.specFile = 'some/path/to/a_spec.js';
       expect(BlueRidge.CommandLine.fixtureFile).toMatch(/a\.html$/);
     });
 
     it("returns the filename prepended with 'fixtures/'", function(){
-      BlueRidge.CommandLine.specFile = 'some/path/to/a_spec.js'
+      BlueRidge.CommandLine.specFile = 'some/path/to/a_spec.js';
       expect(BlueRidge.CommandLine.fixtureFile).toMatch(/^fixtures\/some\/path\/to\/a/);
     });
   });
 
   describe("specDirname", function(){
     it("returns null if given a null spec filename", function(){
-      BlueRidge.CommandLine.specFile = null
+      BlueRidge.CommandLine.specFile = null;
       expect(BlueRidge.CommandLine.specDirname).toBeNull();
     });
 
     it("returns null if given a spec filename without a path prefix", function(){
-      BlueRidge.CommandLine.specFile = 'some_spec.js'
+      BlueRidge.CommandLine.specFile = 'some_spec.js';
       expect(BlueRidge.CommandLine.specDirname).toBeNull();
     });
 
     it("returns the path prefix if given a spec filename with a path prefix", function(){
-      BlueRidge.CommandLine.specFile = 'some/path/to/some_spec.js'
+      BlueRidge.CommandLine.specFile = 'some/path/to/some_spec.js';
       expect(BlueRidge.CommandLine.specDirname).toEqual("some/path/to");
     });
   });
@@ -46,13 +46,13 @@ describe("BlueRidge.CommandLine", function(){
 
     describe("when given a relative filepath", function(){
       it("returns the given filename unchanged if there was NO path prefix on the spec filename", function(){
-        BlueRidge.CommandLine.specFile = 'some_spec.js'
+        BlueRidge.CommandLine.specFile = 'some_spec.js';
         var filename = BlueRidge.CommandLine.prepareFilenameForRequireBasedOnSpecDirectory("../../filename.txt");
         expect(filename).toEqual("../../filename.txt");
       });
 
       it("returns the given filename with the spec file dirname prepended if there was a path prefix on the spec filename", function(){
-        BlueRidge.CommandLine.specFile = 'some/path/to/some_spec.js'
+        BlueRidge.CommandLine.specFile = 'some/path/to/some_spec.js';
         var filename = BlueRidge.CommandLine.prepareFilenameForRequireBasedOnSpecDirectory("../../filename.txt");
         expect(filename).toEqual("some/path/to/../../filename.txt");
       });
