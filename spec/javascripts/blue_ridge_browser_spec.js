@@ -90,21 +90,20 @@ require("../../lib/blue-ridge.js");
         });
       });
 
-      // TODO: note, these tests conflict with the ones above because Smoke doesn't reset its spyOns back to their "natural" values;
-      // need to improve Smoke to be more forgiving on spyOnbing global objects
+      it("creates a script tag with an onload callback if passed an 'onload' option", function(){
+        var callback = function(){ alert("some callback!") };
+        spyOn(BlueRidge.Browser, "calculateDepth").andReturn(0);
+        spyOn(BlueRidge.Browser, 'createScriptTag');
+        BlueRidge.Browser.require("some_url", {onload: callback});
+        expect(BlueRidge.Browser.createScriptTag).wasCalledWith("some_url", callback);
+      });
 
-      // it("creates a script tag with an onload callback if passed an 'onload' option", function(){
-      //   var callback = function(){ alert("some callback!") };
-      //   spyOn(BlueRidge.Browser, "calculateDepth").andReturn(0);
-      //   mock(BlueRidge.Browser).should_receive("createScriptTag").with_arguments("some_url", callback).at_least(1, "time");
-      //   BlueRidge.Browser.require("some_url", {onload: callback});
-      // });
-      // 
-      // it("creates a script tag with NO onload callback if passed NOT an 'onload' option", function(){
-      //   var callback = function(){ alert("some callback!") };
-      //   spyOn(BlueRidge.Browser, "calculateDepth").andReturn(0);
-      //   mock(BlueRidge.Browser).should_receive("createScriptTag").with_arguments("some_url", null).at_least(1, "time");
-      //   BlueRidge.Browser.require("some_url");
-      // });
+      it("creates a script tag with NO onload callback if passed NOT an 'onload' option", function(){
+        var callback = function(){ alert("some callback!") };
+        spyOn(BlueRidge.Browser, "calculateDepth").andReturn(0);
+        spyOn(BlueRidge.Browser, 'createScriptTag');
+        BlueRidge.Browser.require("some_url");
+        expect(BlueRidge.Browser.createScriptTag).wasCalledWith("some_url", null);
+      });
     });
   });
