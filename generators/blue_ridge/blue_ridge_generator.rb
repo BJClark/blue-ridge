@@ -11,7 +11,7 @@ class BlueRidgeGenerator < Rails::Generator::Base
       
       m.directory "#{base_dir}/fixtures"
       m.file 'application.html', "#{base_dir}/fixtures/application.html"
-      m.file 'screw.css',        "#{base_dir}/fixtures/screw.css"
+      m.file 'jasmine.css',      "#{base_dir}/fixtures/jasmine.css"
     end
   end
 end
