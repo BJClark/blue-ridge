@@ -34,23 +34,6 @@ describe("BlueRidge.CommandLine", function(){
     });
   });
 
-  describe("specBasename", function(){
-    it("returns null if given a null spec filename", function(){
-      BlueRidge.CommandLine.specFile = null
-      expect(BlueRidge.CommandLine.specBasename).toBeNull();
-    });
-
-    it("returns the filename if given a spec filename without a path prefix", function(){
-      BlueRidge.CommandLine.specFile = 'some_spec.js'
-      expect(BlueRidge.CommandLine.specBasename).toEqual('some_spec.js');
-    });
-
-    it("returns only the filename if given a spec filename with a path prefix", function(){
-      BlueRidge.CommandLine.specFile = 'some/path/to/some_spec.js'
-      expect(BlueRidge.CommandLine.specBasename).toEqual('some_spec.js');
-    });
-  });
-
   describe("prepareFilenameForRequireBasedOnSpecDirectory", function(){
     it("returns null if given a null filename", function(){
       expect(BlueRidge.CommandLine.prepareFilenameForRequireBasedOnSpecDirectory(null)).toBeNull();
@@ -73,47 +56,6 @@ describe("BlueRidge.CommandLine", function(){
         var filename = BlueRidge.CommandLine.prepareFilenameForRequireBasedOnSpecDirectory("../../filename.txt");
         expect(filename).toEqual("some/path/to/../../filename.txt");
       });
-    });
-  });
-
-  describe("exampleName", function(){
-    it("returns the context name plus the example name for the given 'it' block when there is only one parent describe block", function(){
-      fixture(createDescribeDiv("describe")
-        .append($('<ul class="its"/>')
-        .append('<li class="it" id="sample-it"><h2>example</h2></li>')));
-
-      expect(BlueRidge.CommandLine.exampleName("#sample-it")).toEqual("describe example");
-    });
-
-    it("returns the outer-most to inner-most context name plus the example name for the given 'it' block when it is inside several nested describes", function(){
-      fixture(createDescribeDiv("describe 3")
-        .append(createDescribeDiv("describe 2")
-        .append(createDescribeDiv("describe 1")
-        .append($('<ul class="its"/>')
-        .append('<li class="it" id="sample-it"><h2>example</h2></li>')))));
-
-      expect(BlueRidge.CommandLine.exampleName("#sample-it")).toEqual("describe 3 describe 2 describe 1 example");
-    });
-  });
-
-  describe("contextNamesForExample", function(){
-    it("returns an array with the context name for the given 'it' block when there is only one parent describe block", function(){
-      fixture(createDescribeDiv("describe")
-        .append($('<ul class="its"/>')
-        .append('<li class="it" id="sample-it"><h2>example</h2></li>')));
-
-      expect(BlueRidge.CommandLine.contextNamesForExample("#sample-it")).toEqual(["describe"]);
-    });
-
-    it("returns an array of context names, sorted from outer-most to inner-most, when the given 'it' block is inside several nested describes", function(){
-      fixture(createDescribeDiv("describe 3")
-        .append(createDescribeDiv("describe 2")
-        .append(createDescribeDiv("describe 1")
-        .append($('<ul class="its"/>')
-        .append('<li class="it" id="sample-it"><h2>example</h2></li>')))));
-
-      var expected = ["describe 3", "describe 2", "describe 1"];
-      expect(BlueRidge.CommandLine.contextNamesForExample("#sample-it")).toEqual(expected);
     });
   });
 });
