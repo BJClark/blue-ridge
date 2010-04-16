@@ -1,3 +1,5 @@
+require("jquery-1.4.2.js");
+
 function fixture(element) {
   $('<div id="fixtures"/>').append(element).appendTo("body");
 }
