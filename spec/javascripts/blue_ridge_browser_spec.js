@@ -102,4 +102,44 @@ describe("BlueRidge.Browser", function(){
       expect(BlueRidge.Browser.requirements[0]).toEqual({url: "some_url", onload: null});
     });
   });
+
+  if (Envjs === undefined) {
+    describe("processRequires", function(){
+      beforeEach(function(){
+        BlueRidge.Browser.require_test = {};
+        BlueRidge.Browser.requirements = [
+          {url: "../artifacts/a.js"},
+          {url: "../artifacts/b.js"},
+          {url: "../artifacts/c.js"}];
+      });
+
+      it("causes each required script to be executed", function(){
+        BlueRidge.Browser.processRequires(function(){});
+        waits(50);
+        runs(function(){
+          expect(BlueRidge.Browser.require_test.a_required).toBe(true);
+          expect(BlueRidge.Browser.require_test.b_required).toBe(true);
+          expect(BlueRidge.Browser.require_test.c_required).toBe(true);
+        });
+      });
+
+      it("waits for a script to finish before processing the next", function(){
+        BlueRidge.Browser.processRequires(function(){});
+        waits(50);
+        runs(function(){
+          expect(BlueRidge.Browser.require_test.a_required_before_b).toBe(true);
+          expect(BlueRidge.Browser.require_test.b_required_before_c).toBe(true);
+        });
+      });
+
+      it("calls the callback after finishing", function(){
+        var callback = jasmine.createSpy();
+        BlueRidge.Browser.processRequires(callback);
+        waits(50);
+        runs(function(){
+          expect(callback).wasCalled();
+        });
+      });
+    });
+  }
 });
