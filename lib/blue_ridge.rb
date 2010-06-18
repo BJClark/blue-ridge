@@ -1,3 +1,4 @@
+require 'v8'
 module BlueRidge
   JavaScriptSpecDirs = ["examples/javascripts", "spec/javascripts", "test/javascript"]
   
