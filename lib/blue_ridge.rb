@@ -1,4 +1,3 @@
-require 'v8'
 module BlueRidge
   JavaScriptSpecDirs = ["examples/javascripts", "spec/javascripts", "test/javascript"]
   
@@ -6,13 +5,12 @@ module BlueRidge
     ENV["BLUE_RIDGE_PREFIX"] || "#{RAILS_ROOT}/vendor/plugins/blue-ridge"
   end
   
-  def self.environment_command
-    # "java -Dblue.ridge.prefix=\"#{plugin_prefix}\" -jar \"#{plugin_prefix}/vendor/js.jar\" -w -debug -opt -1"
-    "js"
+  def self.rhino_command
+    "java -Dblue.ridge.prefix=\"#{plugin_prefix}\" -jar \"#{plugin_prefix}/vendor/js.jar\" -w -debug -opt -1"
   end
   
   def self.test_runner_command
-    "#{environment_command} \"#{plugin_prefix}/lib/test_runner.js\""
+    "#{rhino_command} \"#{plugin_prefix}/lib/test_runner.js\""
   end
   
   def self.find_base_spec_dir
